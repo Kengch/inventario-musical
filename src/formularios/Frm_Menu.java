@@ -5,6 +5,8 @@
 package formularios;
 
 import baseDatos.baseDatos;
+import formulariosClasesMusicales.frm_agregarClase;
+import formulariosClasesMusicales.frm_listaClases;
 import formulariosInventarios.frm_agregarInventario;
 import formulariosInventarios.frm_listaInvetario;
 import java.sql.Connection;
@@ -98,8 +100,18 @@ public class Frm_Menu extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Clases Musicales"));
 
         btn__CrearClase.setText("Crear Clase");
+        btn__CrearClase.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn__CrearClaseActionPerformed(evt);
+            }
+        });
 
         btn__listaClases.setText("Lista de Clases");
+        btn__listaClases.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn__listaClasesActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -254,6 +266,18 @@ public class Frm_Menu extends javax.swing.JFrame {
         frm_listaInvetario listaInventario = new frm_listaInvetario();
         listaInventario.setVisible(true);
     }//GEN-LAST:event_btn__listaInventarioActionPerformed
+
+    private void btn__CrearClaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn__CrearClaseActionPerformed
+        // TODO add your handling code here:
+        frm_agregarClase clase = new frm_agregarClase();
+        clase.setVisible(true);
+    }//GEN-LAST:event_btn__CrearClaseActionPerformed
+
+    private void btn__listaClasesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn__listaClasesActionPerformed
+        // TODO add your handling code here:
+        frm_listaClases lista = new frm_listaClases();
+        lista.setVisible(true);
+    }//GEN-LAST:event_btn__listaClasesActionPerformed
 
     /**
      * @param args the command line arguments
