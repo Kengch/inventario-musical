@@ -4,17 +4,57 @@
  */
 package formulariosClasesMusicales;
 
+import baseDatos.baseDatos;
+import java.sql.*;
+import javax.swing.ButtonGroup;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+
+
 /**
  *
  * @author Keng
  */
 public class frm_listaClases extends javax.swing.JFrame {
-
+    private baseDatos bd;
+    private Connection conn = null;
+    private ButtonGroup checkBoxGroup;
+    private DefaultTableModel tblModel;
     /**
      * Creates new form frm_listaClases
      */
     public frm_listaClases() {
         initComponents();
+        
+        //desactivar botones
+        btn_editar.setEnabled(false);
+        btn_eliminar.setEnabled(false);
+        
+        //obtener datos desde la bd
+        try {
+            conn = bd.abrirBD();
+            Statement stmt = conn.createStatement();
+            String query = "SELECT * FROM clases where eliminado = '0'";
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()){
+                String id = rs.getString("id");
+                String dia = rs.getString("dia_clase");
+                String valor = rs.getString("costo");
+                String instrumento = rs.getString("instrumento");
+
+                String fechaCreacion = rs.getString("fecha_de_creacion");
+              
+                String tbData [] = {id, dia, valor, instrumento, fechaCreacion};
+                tblModel = (DefaultTableModel)table_listaClases.getModel();
+              
+                tblModel.addRow(tbData);
+            }
+            
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -87,15 +127,17 @@ public class frm_listaClases extends javax.swing.JFrame {
 
         table_listaClases.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
                 "Id", "Dia", "Valor", "Instrumento", "Fecha de Creacion"
             }
         ));
+        table_listaClases.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                table_listaClasesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(table_listaClases);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -161,9 +203,9 @@ public class frm_listaClases extends javax.swing.JFrame {
     }//GEN-LAST:event_txt_buscarActionPerformed
 
     private void btn_buscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_buscarActionPerformed
-        /*if(txt_buscar.getText().equals("") == false){
+        if(txt_buscar.getText().equals("") == false){
             //limpiar tabla
-            tblModel = (DefaultTableModel)table_listaInstrumentos.getModel();
+            tblModel = (DefaultTableModel)table_listaClases.getModel();
             tblModel.setRowCount(0);
 
             String buscar = txt_buscar.getText();
@@ -172,23 +214,25 @@ public class frm_listaClases extends javax.swing.JFrame {
                 conn = bd.abrirBD();
                 Statement stmt = conn.createStatement();
                 String query = "SELECT *"
-                + "FROM instrumentos "
-                + "WHERE disponible = '0' "
-                + "AND nombre like '%" + buscar +"%' "
-                + "OR tipo like '%" + buscar + "%' "
-                + "OR valor like '%" + buscar + "%' "
+                + "FROM clases "
+                + "WHERE eliminado = '0' "
+                + "AND dia_clase like '%" + buscar +"%' "
+                + "OR costo like '%" + buscar + "%' "
+                + "OR instrumento like '%" + buscar + "%' "
+                 + "OR id like '%" + buscar + "%' "
                 + "OR fecha_de_creacion like '%" + buscar + "%' ";
                 ResultSet rs = stmt.executeQuery(query);
 
                 while(rs.next()){
-                    String id = rs.getString("id");
-                    String nombre = rs.getString("nombre");
-                    String tipo = rs.getString("tipo");
-                    String valor = rs.getString("valor");
+                     String id = rs.getString("id");
+                    String dia = rs.getString("dia_clase");
+                    String valor = rs.getString("costo");
+                    String instrumento = rs.getString("instrumento");
+
                     String fechaCreacion = rs.getString("fecha_de_creacion");
 
-                    String tbData [] = {id, nombre, tipo, valor, fechaCreacion};
-                    tblModel = (DefaultTableModel)table_listaInstrumentos.getModel();
+                    String tbData [] = {id, dia, valor, instrumento, fechaCreacion};
+                    tblModel = (DefaultTableModel)table_listaClases.getModel();
 
                     tblModel.addRow(tbData);
                 }
@@ -197,7 +241,7 @@ public class frm_listaClases extends javax.swing.JFrame {
             catch(SQLException e){
                 e.printStackTrace();
             }
-        }*/
+        }
     }//GEN-LAST:event_btn_buscarActionPerformed
 
     private void btn_atras1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_atras1ActionPerformed
@@ -207,21 +251,91 @@ public class frm_listaClases extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_atras1ActionPerformed
 
     private void btn_cargarListaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cargarListaActionPerformed
-      
+        //limpiar search
+        txt_buscar.setText("");
+        
+        //limpiar tabla
+        tblModel = (DefaultTableModel)table_listaClases.getModel();
+        tblModel.setRowCount(0);
+        
+         try {
+            conn = bd.abrirBD();
+            Statement stmt = conn.createStatement();
+            String query = "SELECT * FROM clases WHERE eliminado = '0'";
+            ResultSet rs = stmt.executeQuery(query);
+            
+            while(rs.next()){
+                String id = rs.getString("id");
+                String dia = rs.getString("dia_clase");
+                String valor = rs.getString("costo");
+                String instrumento = rs.getString("instrumento");
+
+                String fechaCreacion = rs.getString("fecha_de_creacion");
+
+                String tbData [] = {id, dia, valor, instrumento, fechaCreacion};
+                tblModel = (DefaultTableModel)table_listaClases.getModel();
+              
+              tblModel.addRow(tbData);
+            }
+            
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
     }//GEN-LAST:event_btn_cargarListaActionPerformed
 
     private void btn_editarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_editarActionPerformed
-
+        tblModel = (DefaultTableModel)table_listaClases.getModel();
+        int selectedRowIndex = table_listaClases.getSelectedRow();
+        
+        String id = tblModel.getValueAt(selectedRowIndex, 0).toString();
+        String dia = tblModel.getValueAt(selectedRowIndex, 1).toString();
+        String valor = tblModel.getValueAt(selectedRowIndex, 2).toString();
+        String instrumento = tblModel.getValueAt(selectedRowIndex, 3).toString();
+        
+        frm_editarClase editar = new frm_editarClase(id, dia, valor, instrumento);
+        editar.setVisible(true);
+        
         btn_editar.setEnabled(false);
         btn_eliminar.setEnabled(false);
     }//GEN-LAST:event_btn_editarActionPerformed
 
     private void btn_eliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_eliminarActionPerformed
-      
+       //limpiar search
+        txt_buscar.setText("");
+        
+        tblModel = (DefaultTableModel)table_listaClases.getModel();
+        int selectedRowIndex = table_listaClases.getSelectedRow();
+        
+        String id = tblModel.getValueAt(selectedRowIndex, 0).toString(); 
+        
+        String query = "UPDATE clases SET eliminado = '1' WHERE id = ?";
+        try{
+                PreparedStatement pstmt = conn.prepareStatement(query);
+                pstmt.setString(1, id);
+                int row = pstmt.executeUpdate();
+                
+                if(row == 1){
+                    JOptionPane.showMessageDialog(null, "Se ha eliminado instrumento");
+                    JOptionPane.showMessageDialog(null, "Por favor refresque la lista");
+                }else{
+                    JOptionPane.showMessageDialog(null, "No se pudo eliminar instrumento");
+                }
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+            System.err.println(e.getMessage());
+        }
 
         btn_editar.setEnabled(false);
         btn_eliminar.setEnabled(false);
     }//GEN-LAST:event_btn_eliminarActionPerformed
+
+    private void table_listaClasesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_table_listaClasesMouseClicked
+        // TODO add your handling code here:
+         btn_editar.setEnabled(true);
+        btn_eliminar.setEnabled(true);
+    }//GEN-LAST:event_table_listaClasesMouseClicked
 
     /**
      * @param args the command line arguments
